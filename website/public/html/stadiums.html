@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stadiums</title>
+    <link rel="stylesheet" href="/css/stadiums.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="Football Logo">
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/html/players.html">Players</a>
+            </li>
+            <li>
+                <a href="/html/coaches.html">Coaches</a>
+            </li>
+            <li>
+                <a href="/html/matches.html">Matches</a>
+            </li>
+            <li>
+                <a href="/html/transfers.html">Transfers</a>
+            </li>
+            <li>
+                <a href="/html/stadiums.html">Stadiums</a>
+            </li>
+            <li>
+                <a href="/html/standings.html">Standing</a>
+            </li>
+            <li>
+                <a href="/html/awards.html">Awards</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <h1>Stadiums</h1>
+        <table id="stadiums-table">
+            <thead>
+                <tr>
+                    <th>Stadium Name</th>
+                    <th>Capacity</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Stadium data will be dynamically loaded here -->
+            </tbody>
+        </table>
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchStadiums() {
+            try {
+                const response = await fetch('/api/stadiums');
+                const stadiums = await response.json();
+
+                const tableBody = document.querySelector('#stadiums-table tbody');
+
+                stadiums.forEach(stadium => {
+                    const row = document.createElement('tr');
+
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = stadium.stadium_name;
+                    row.appendChild(nameCell);
+
+                    const capacityCell = document.createElement('td');
+                    capacityCell.textContent = stadium.capacity.toLocaleString();
+                    row.appendChild(capacityCell);
+
+                    const locationCell = document.createElement('td');
+                    locationCell.textContent = stadium.location;
+                    row.appendChild(locationCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching stadiums:', error);
+            }
+        }
+
+        window.onload = fetchStadiums;
+    </script>
+</body>
+</html>

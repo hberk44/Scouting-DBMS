@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Players</title>
+    <link rel="stylesheet" href="/css/players.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="football logo">
+            </a>
+        </div>
+        <ul>
+            <li><a href="/html/players.html">Players</a></li>
+            <li><a href="/html/coaches.html">Coaches</a></li>
+            <li><a href="/html/matches.html">Matches</a></li>
+            <li><a href="/html/transfers.html">Transfers</a></li>
+            <li><a href="/html/stadiums.html">Stadiums</a></li>
+            <li><a href="/html/standings.html">Standing</a></li>
+            <li><a href="/html/awards.html">Awards</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <h1>Players</h1>
+
+        <div id="players-container">
+            <!-- Player cards will be injected here dynamically -->
+        </div>
+
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchPlayers() {
+            try {
+                const response = await fetch('/api/players');
+                const players = await response.json();
+    
+                const container = document.getElementById('players-container');
+    
+                players.forEach(player => {
+                    const playerCard = document.createElement('div');
+                    playerCard.className = 'player-card';
+                    playerCard.setAttribute('data-player-id', player.player_id);
+    
+                    playerCard.innerHTML = `
+                        <img 
+                            src="${player.url}" 
+                            alt="${player.first_name} ${player.last_name}" 
+                            title="${player.first_name} ${player.last_name}" 
+                            class="player-image"
+                        >
+                        <h2>${player.first_name} ${player.last_name}</h2>
+                        <p><strong>Position:</strong> ${player.position}</p>
+                        <p><strong>Nationality:</strong> ${player.nationality}</p>
+                        <p><strong>Team:</strong> ${player.team_name}</p>
+                        <p><strong>Age:</strong> ${player.age}</p>
+                        <p><strong>Height:</strong> ${player.height} m</p>
+                        <p><strong>Weight:</strong> ${player.weight} kg</p>
+                        <p><strong>Market Value:</strong> € ${player.market_value.toLocaleString()}M</p>
+                        <p><strong>Date of Birth:</strong> ${new Date(player.date_of_birth).toLocaleDateString()}</p>
+                        <button class="delete-btn" onclick="deletePlayer(event, ${player.player_id})">Delete</button>
+                    `;
+    
+                    container.appendChild(playerCard);
+                });
+            } catch (error) {
+                console.error('Error fetching players:', error);
+            }
+        }
+
+        async function deletePlayer(event, playerId) {
+    if (confirm("Are you sure you want to delete this player?")) {
+        try {
+            console.log(`Deleting player with ID = ${playerId}`);
+            
+            // Send the DELETE request to the backend API
+            const response = await fetch(`/api/players/${playerId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.message); // Success message from the API
+                
+                alert(`Player with ID = ${playerId} deleted successfully.`);
+                
+                // Remove the player card from the DOM
+                const playerCard = event.target.closest('.player-card');
+                if (playerCard) {
+                    playerCard.remove();
+                }
+            } else {
+                alert(`Failed to delete player with ID = ${playerId}`);
+            }
+        } catch (error) {
+            console.error('Error deleting player:', error);
+            alert('Error deleting player.');
+        }
+    }
+}
+
+        window.onload = fetchPlayers;
+    </script>
+</body>
+</html>

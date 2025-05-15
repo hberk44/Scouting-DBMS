@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standings</title>
+    <link rel="stylesheet" href="/css/standings.css">  
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="football">
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/html/players.html">Players</a>
+            </li>
+            <li>
+                <a href="/html/coaches.html">Coaches</a>
+            </li>
+            <li>
+                <a href="/html/matches.html">Matches</a>
+            </li>
+            <li>
+                <a href="/html/transfers.html">Transfers</a>
+            </li>
+            <li>
+                <a href="/html/stadiums.html">Stadiums</a>
+            </li>
+            <li>
+                <a href="/html/standings.html">Standing</a>
+            </li>
+            <li>
+                <a href="/html/awards.html">Awards</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <h2>League Standings</h2>
+
+        <table id="standings-table">
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Matches Played</th>
+                    <th>Wins</th>
+                    <th>Draws</th>
+                    <th>Losses</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+            </tbody>
+        </table>
+
+        <!-- Back to Main Menu Button -->
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        
+        async function fetchStandings() {
+            try {
+                
+                const response = await fetch('/api/standingview');
+                const data = await response.json();
+
+               
+                const tableBody = document.querySelector('#standings-table tbody');
+                
+                tableBody.innerHTML = '';
+
+                data.forEach(team => {
+                    const row = document.createElement('tr');
+
+                    const teamNameCell = document.createElement('td');
+                    teamNameCell.textContent = team.Team_Name;
+                    row.appendChild(teamNameCell);
+
+                    const matchesPlayedCell = document.createElement('td');
+                    matchesPlayedCell.textContent = team.Matches_Played;
+                    row.appendChild(matchesPlayedCell);
+
+                    const winsCell = document.createElement('td');
+                    winsCell.textContent = team.Wins;
+                    row.appendChild(winsCell);
+
+                    const drawsCell = document.createElement('td');
+                    drawsCell.textContent = team.Draws;
+                    row.appendChild(drawsCell);
+
+                    const lossesCell = document.createElement('td');
+                    lossesCell.textContent = team.Losses;
+                    row.appendChild(lossesCell);
+
+                    const pointsCell = document.createElement('td');
+                    pointsCell.textContent = team.Points;
+                    row.appendChild(pointsCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching standings:', error);
+            }
+        }
+
+        window.onload = fetchStandings;
+    </script>
+</body>
+</html>

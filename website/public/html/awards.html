@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awards</title>
+    <link rel="stylesheet" href="/css/awards.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="Football Logo">
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/html/players.html">Players</a>
+            </li>
+            <li>
+                <a href="/html/coaches.html">Coaches</a>
+            </li>
+            <li>
+                <a href="/html/matches.html">Matches</a>
+            </li>
+            <li>
+                <a href="/html/transfers.html">Transfers</a>
+            </li>
+            <li>
+                <a href="/html/stadiums.html">Stadiums</a>
+            </li>
+            <li>
+                <a href="/html/standings.html">Standing</a>
+            </li>
+            <li>
+                <a href="/html/awards.html">Awards</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <h1>Awards</h1>
+        <table id="awards-table">
+            <thead>
+                <tr>
+                    <th>Award Year</th>
+                    <th>Award Name</th>
+                    <th>Player</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Awards data will be dynamically loaded here -->
+            </tbody>
+        </table>
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchAwards() {
+            try {
+                const response = await fetch('/api/awards');
+                const awards = await response.json();
+
+                const tableBody = document.querySelector('#awards-table tbody');
+
+                awards.forEach(award => {
+                    const row = document.createElement('tr');
+
+                    const yearCell = document.createElement('td');
+                    yearCell.textContent = award.award_year;
+                    row.appendChild(yearCell);
+
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = award.award_name;
+                    row.appendChild(nameCell);
+
+                    const playerCell = document.createElement('td');
+                    playerCell.textContent = `${award.first_name} ${award.last_name}`;
+                    row.appendChild(playerCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching awards:', error);
+            }
+        }
+
+        window.onload = fetchAwards;
+    </script>
+</body>
+</html>

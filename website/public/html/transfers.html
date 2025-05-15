@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfers</title>
+    <link rel="stylesheet" href="/css/transfers.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="Football Logo">
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/html/players.html">Players</a>
+            </li>
+            <li>
+                <a href="/html/coaches.html">Coaches</a>
+            </li>
+            <li>
+                <a href="/html/matches.html">Matches</a>
+            </li>
+            <li>
+                <a href="/html/transfers.html">Transfers</a>
+            </li>
+            <li>
+                <a href="/html/stadiums.html">Stadiums</a>
+            </li>
+            <li>
+                <a href="/html/standings.html">Standing</a>
+            </li>
+            <li>
+                <a href="/html/awards.html">Awards</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <h1>Transfers</h1>
+        <table id="transfers-table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>From Team</th>
+                    <th>To Team</th>
+                    <th>Date</th>
+                    <th>Transfer Fee (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Transfer data will be dynamically loaded here -->
+            </tbody>
+        </table>
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchTransfers() {
+            try {
+                const response = await fetch('/api/transfers');
+                const transfers = await response.json();
+
+                const tableBody = document.querySelector('#transfers-table tbody');
+
+                transfers.forEach(transfer => {
+                    const row = document.createElement('tr');
+
+                    const playerCell = document.createElement('td');
+                    playerCell.textContent = `${transfer.player_first_name} ${transfer.player_last_name}`;
+                    row.appendChild(playerCell);
+
+                    const fromTeamCell = document.createElement('td');
+                    fromTeamCell.textContent = transfer.from_team;
+                    row.appendChild(fromTeamCell);
+
+                    const toTeamCell = document.createElement('td');
+                    toTeamCell.textContent = transfer.to_team;
+                    row.appendChild(toTeamCell);
+
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = new Date(transfer.transfer_date).toLocaleDateString();
+                    row.appendChild(dateCell);
+
+                    const feeCell = document.createElement('td');
+                    feeCell.textContent = transfer.transfer_fee.toLocaleString('en-US', { style: 'currency', currency: 'EUR' });
+                    row.appendChild(feeCell);
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching transfers:', error);
+            }
+        }
+
+        window.onload = fetchTransfers;
+    </script>
+</body>
+</html>

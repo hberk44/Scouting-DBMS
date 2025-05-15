@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trendyol Süper Lig Teams</title>
+    <link rel="stylesheet" href="/css/laliga.css">
+</head>
+<body>
+    <main>
+        <h1>Trendyol Süper Lig Teams</h1>
+        <div id="teams-container">
+            <!-- Team cards will be inserted here -->
+        </div>
+        <button id="back-btn">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchTeams() {
+            try {
+                const response = await fetch('/api/bjk');
+                const data = await response.json();
+                const container = document.getElementById('teams-container');
+                data.forEach(team => {
+                    const teamCard = document.createElement('div');
+                    teamCard.className = 'team-card';
+                    teamCard.innerHTML = `
+                        <h2>${team.team_name}</h2>
+                        <p><strong>Founded:</strong> ${team.founded_year}</p>
+                        <p><strong>Primary Color:</strong> ${team.club_color1}</p>
+                        <p><strong>Secondary Color:</strong> ${team.club_color2 || 'N/A'}</p>
+                        <p><strong>Stadium ID:</strong> ${team.stadium_id}</p>
+                    `;
+                    container.appendChild(teamCard);
+                });
+            } catch (error) {
+                console.error('Error fetching teams:', error);
+            }
+        }
+        window.onload = fetchTeams;
+        document.getElementById('back-btn').onclick = () => {
+            window.location.href = '/index.html';
+        };
+    </script>
+</body>
+</html>

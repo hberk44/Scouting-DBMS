@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaches</title>
+    <link rel="stylesheet" href="/css/coaches.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">
+                <img src="/images/football.png" alt="football logo">
+            </a>
+        </div>
+        <ul>
+            <li>
+                <a href="/html/players.html">Players</a>
+            </li>
+            <li>
+                <a href="/html/coaches.html">Coaches</a>
+            </li>
+            <li>
+                <a href="/html/matches.html">Matches</a>
+            </li>
+            <li>
+                <a href="/html/transfers.html">Transfers</a>
+            </li>
+            <li>
+                <a href="/html/stadiums.html">Stadiums</a>
+            </li>
+            <li>
+                <a href="/html/standings.html">Standing</a>
+            </li>
+            <li>
+                <a href="/html/awards.html">Awards</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <h1>Coaches</h1>
+        <div id="coaches-container">
+            <!-- Coach cards will be dynamically added here -->
+        </div>
+        <button class="back-btn" onclick="window.location.href = '/'">Back to Main Menu</button>
+    </main>
+
+    <script>
+        async function fetchCoaches() {
+            try {
+                const response = await fetch('/api/coaches');
+                const coaches = await response.json();
+
+                const container = document.getElementById('coaches-container');
+
+                coaches.forEach(coach => {
+                    const coachCard = document.createElement('div');
+                    coachCard.className = 'coach-card';
+
+                    coachCard.innerHTML = `
+                        <img src="${coach.image_url}" alt="${coach.first_name} ${coach.last_name}" class="coach-image">
+                        <h2>${coach.first_name} ${coach.last_name}</h2>
+                        <p><strong>Team:</strong> ${coach.team_name}</p>
+                        <p><strong>Nationality:</strong> ${coach.nationality}</p>
+                        <p><strong>Date of Birth:</strong> ${new Date(coach.date_of_birth).toLocaleDateString()}</p>
+                    `;
+
+                    container.appendChild(coachCard);
+                });
+            } catch (error) {
+                console.error('Error fetching coaches:', error);
+            }
+        }
+
+        window.onload = fetchCoaches;
+    </script>
+</body>
+</html>
+

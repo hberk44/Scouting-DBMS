@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <img src="/images/football.png" alt="Football Logo">
+            <h1>Welcome to the Football Scouting System</h1>
+        </div>
+    </div>
+
+    <!-- Main Content Starts Here -->
+    <main>
+        <header>
+            <div class="logo">
+                <a href="#">
+                    <img src="/images/football.png" alt="football">
+                </a>
+            </div>
+            <button class="add-player-btn" onclick="togglePlayerForm()">Add Player</button>
+
+            <!-- Player Form -->
+            <div id="player-form" class="player-form">
+                <form id="add-player-form">
+                    <label for="first-name">First Name:</label>
+                    <input type="text" id="first-name" name="first_name" required>
+                    <label for="last-name">Last Name:</label>
+                    <input type="text" id="last-name" name="last_name" required>
+                    <label for="position">Position:</label>
+                    <input type="text" id="position" name="position" required>
+                    <label for="nationality">Nationality:</label>
+                    <input type="text" id="nationality" name="nationality" required>
+                    <label for="team">Team:</label>
+                    <input type="text" id="team" name="team_name" required>
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required>
+                    <label for="height">Height (m):</label>
+                    <input type="number" step="0.01" id="height" name="height" required>
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" step="0.1" id="weight" name="weight" required>
+                    <label for="market-value">Market Value (M€):</label>
+                    <input type="number" step="0.1" id="market-value" name="market_value" required>
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="date_of_birth" required>
+                    <label for="image-url">Image URL:</label>
+                    <input type="text" id="image-url" name="image_url">
+                    <button type="submit">Submit</button>
+                </form>
+                <button class="close-btn" onclick="togglePlayerForm()">Close</button>
+            </div>
+            <ul>
+                <li><a href="/html/players.html">Players</a></li>
+                <li><a href="/html/coaches.html">Coaches</a></li>
+                <li><a href="/html/matches.html">Matches</a></li>
+                <li><a href="/html/transfers.html">Transfers</a></li>
+                <li><a href="/html/stadiums.html">Stadiums</a></li>
+                <li><a href="/html/standings.html">Standing</a></li>
+                <li><a href="/html/awards.html">Awards</a></li>
+            </ul>
+        </header>
+
+        <div class="content">
+            <div class="item">
+                <a href="/html/laliga.html">
+                    <img src="/images/laliga123.jpg" alt="laliga">
+                    <div class="text">
+                        <div class="text-inner">
+                            <h3>La Liga</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="/html/bjk.html">
+                    <img src="/images/bjk12345.jpg" alt="bjk">
+                    <div class="text">
+                        <div class="text-inner">
+                            <h3>Trendyol Süper Lig</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="/html/england.html">
+                    <img src="/images/ingiltere123.jpg" alt="england">
+                    <div class="text">
+                        <div class="text-inner">
+                            <h3>Premier League</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Splash screen functionality with delay
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('splash-screen').style.display = 'none';
+            }, 1000); // Splash screen second
+        };
+
+        function togglePlayerForm() {
+    const form = document.getElementById('player-form');
+    if (form.style.display === 'none' || !form.style.display) {
+        form.style.display = 'flex'; // Ensure it's centered
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+        document.getElementById('add-player-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const playerData = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/addPlayer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(playerData)
+                });
+
+                if (response.ok) {
+                    alert('Player added successfully!');
+                    togglePlayerForm(); // Hide form after successful submission
+                } else {
+                    alert('Error adding player');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the player');
+            }
+        });
+    </script>
+</body>
+</html>
