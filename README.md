@@ -1,1 +1,1 @@
-# Scouting-DBMS
+Hasan Berk
